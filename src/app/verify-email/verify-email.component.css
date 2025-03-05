@@ -1,0 +1,41 @@
+/* 🌟 Center the verification card */
+.verification-card {
+    max-width: 500px;
+    margin: 120px auto;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: #fff;
+}
+
+/* ✅ Green Success Message */
+.success-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+/* ✅ Green Success Icon */
+.success-icon {
+    color: #28a745;
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+/* ✅ Green Return Home Button */
+.return-home-btn {
+    margin-top: 15px;
+    background-color: #28a745 !important; /* Bootstrap success green */
+    color: white !important;
+}
+/* ✅ Center the resend button */
+.resend-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}

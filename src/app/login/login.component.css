@@ -1,0 +1,58 @@
+/* توسيط الكارد */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
+/* الكارد */
+.form-card {
+    width: 350px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+}
+
+/* زر Home خارج الكارد وأقصى اليسار */
+.home-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #ffffff;
+    color: #003366;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+/* جعل الحقول تأخذ العرض بالكامل */
+mat-form-field {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* زر تسجيل الدخول والتسجيل */
+.btn-primary {
+    width: 100%;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+/* تنسيق الأخطاء */
+.error-style {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* توسيط الـ progress spinner */
+.progressIndicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}

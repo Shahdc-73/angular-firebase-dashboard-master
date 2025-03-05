@@ -1,0 +1,37 @@
+<div class="container">
+    <mat-card>
+        
+        <div class="home-btn-container">
+            <button mat-raised-button color="primary" routerLink="/home" class="home-btn">
+                <mat-icon>home</mat-icon>  
+                <span>Home</span>
+            </button>
+        </div>
+
+        <h2 class="title">Login</h2>
+
+        <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+            <p>
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input autocomplete="off" formControlName="email" type="email" matInput placeholder="Email">
+                </mat-form-field>
+            </p>
+            <p>
+                <mat-form-field appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input autocomplete="off" formControlName="password" type="password" matInput placeholder="Password">
+                </mat-form-field>
+            </p>
+            <div *ngIf="firebaseErrorMessage != ''" class="error-style">
+                <span>{{ firebaseErrorMessage }}</span>
+            </div>
+
+            <button mat-raised-button color="primary" class="btn-signin">Login</button>
+        </form>
+    </mat-card>
+</div>
+
+<div class="progressIndicator" [style.display]="isProgressVisible ? 'inline' : 'none' ">
+    <mat-progress-spinner class="example-margin" color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>

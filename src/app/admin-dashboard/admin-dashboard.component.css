@@ -1,0 +1,38 @@
+.dashboard-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.dashboard-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.home-button {
+    margin-bottom: 20px;
+}
+
+.admin-section {
+    background-color: #f1f8e9;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.admin-text {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.admin-note {
+    font-size: 14px;
+    color: #666;
+}
+
+.not-admin {
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+}

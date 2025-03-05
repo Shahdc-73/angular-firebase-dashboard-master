@@ -1,0 +1,52 @@
+ <mat-toolbar color="primary" class="navbar">
+    <button mat-button routerLink="/home" class="home-btn">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+    </button>
+</mat-toolbar>
+
+ 
+<div class="container">
+    <mat-card class="verification-card">
+        <mat-card-title class="text-center">Verify Your Email</mat-card-title>
+        <mat-card-content>
+            <p class="text-center">
+                A verification email will be sent to <strong>{{ email }}</strong>.
+            </p>
+
+    
+            <mat-card *ngIf="firebaseErrorMessage" class="error-message">
+                <mat-icon color="warn">error</mat-icon>
+                <span>{{ firebaseErrorMessage }}</span>
+            </mat-card>
+
+         
+            <div class="resend-container">
+                <button mat-raised-button color="primary" [disabled]="!canResend" (click)="resendVerificationEmail()">
+                    <mat-icon>refresh</mat-icon>
+                    Resend Verification Email <span *ngIf="!canResend"> ({{ resendTimer }}s)</span>
+                </button>
+            </div>
+
+
+            
+            <div *ngIf="mailSent" class="success-container">
+                <mat-card class="success-message">
+                    <mat-icon class="success-icon">check_circle</mat-icon>
+                    <span>An email has been sent successfully!</span>
+                </mat-card>
+
+ 
+                <button mat-raised-button color="accent" routerLink="/home" class="return-home-btn">
+                    <mat-icon>home</mat-icon>
+                    Return Home
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+ 
+    <div class="loading-container" *ngIf="isProgressVisible">
+        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+    </div>
+</div>

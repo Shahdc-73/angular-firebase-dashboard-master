@@ -1,0 +1,58 @@
+<mat-card class="dashboard-container">
+  <h1 class="dashboard-title">Dashboard</h1>
+
+  <!-- Home Button -->
+  <button mat-raised-button color="primary" routerLink="/home" class="home-button">
+    <mat-icon>home</mat-icon>
+    <span>Home</span>
+  </button>
+
+  <!-- Display table if data exists -->
+  <table mat-table [dataSource]="userData" class="mat-elevation-z8" *ngIf="userData.length > 0">
+    
+    <!-- Account Type -->
+    <ng-container matColumnDef="accountType">
+      <th mat-header-cell *matHeaderCellDef> Account Type </th>
+      <td mat-cell *matCellDef="let element"> {{ element.accountType }} </td>
+    </ng-container>
+
+    <!-- Display Name -->
+    <ng-container matColumnDef="displayName">
+      <th mat-header-cell *matHeaderCellDef> Display Name </th>
+      <td mat-cell *matCellDef="let element"> {{ element.displayName }} </td>
+    </ng-container>
+
+    <!-- Email -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let element"> {{ element.email }} </td>
+    </ng-container>
+
+    <!-- Email Verification Status -->
+    <ng-container matColumnDef="emailVerified">
+      <th mat-header-cell *matHeaderCellDef> Email Verified </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon [ngClass]="element.emailVerified ? 'icon-success' : 'icon-failure'">
+          {{ element.emailVerified ? 'check_circle' : 'cancel' }}
+        </mat-icon>
+      </td>
+    </ng-container>
+
+    <!-- User Status -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon [ngClass]="element.isActive ? 'icon-success' : 'icon-failure'">
+          {{ element.isActive ? 'check_circle' : 'cancel' }}
+        </mat-icon>
+      </td>
+    </ng-container>
+
+    <!-- Table Headers -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- No Data Message -->
+  <p *ngIf="userData.length === 0" class="no-data">No user data found.</p>
+</mat-card>

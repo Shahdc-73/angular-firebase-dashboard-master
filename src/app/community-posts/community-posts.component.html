@@ -1,0 +1,32 @@
+<div class="container">
+  <h2>Community Posts</h2>
+
+  <!-- Create New Post -->
+  <div class="form">
+    <h3>Add a New Post</h3>
+    <input type="text" [(ngModel)]="newPost.title" placeholder="Title">
+    <textarea [(ngModel)]="newPost.content" placeholder="Content"></textarea>
+    <button (click)="addPost()">Add Post</button>
+  </div>
+
+  <!-- List of Posts -->
+  <div class="posts">
+    <div *ngFor="let post of posts" class="post">
+      <div *ngIf="editingPost && editingPost.id === post.id; else viewPost">
+        <h3>Edit Post</h3>
+        <input type="text" [(ngModel)]="editingPost.title">
+        <textarea [(ngModel)]="editingPost.content"></textarea>
+        <button (click)="updatePost()">Update</button>
+        <button (click)="cancelEdit()">Cancel</button>
+      </div>
+
+      <ng-template #viewPost>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content }}</p>
+        <small>Created by: {{ post.createdBy }}</small>
+        <button (click)="editPost(post)">Edit</button>
+        <button (click)="deletePost(post.id)">Delete</button>
+      </ng-template>
+    </div>
+  </div>
+</div>
