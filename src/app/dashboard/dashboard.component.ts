@@ -2,41 +2,33 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']  
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  user: Observable<any> | null = null;
-  userData: any[] = [];
-  displayedColumns: string[] = ['accountType', 'displayName', 'email', 'emailVerified', 'status'];
+  users$: Observable<any[]> | null = null;  // Fetch all users
+  admins$: Observable<any[]> | null = null;  // Fetch admin users
 
-  constructor(private afAuth: AngularFireAuth, private firestore: AngularFirestore) {}
+  constructor(private afAuth: AngularFireAuth, private firestore: AngularFirestore, private router: Router) {}
 
   ngOnInit(): void {
     this.afAuth.authState.subscribe(user => {
-      if (user && user.email) {
-        const emailLower = user.email.toLowerCase();
-        this.user = this.firestore.collection('users').doc(emailLower).valueChanges();
+      console.log('Dashboard: user', user);
+      if (user) {
+        // Fetch all users from Firestore
+        this.users$ = this.firestore.collection('users').valueChanges({ idField: 'id' });
 
-        this.user.subscribe(userData => {
-          if (userData) {
-            this.userData = [{
-              accountType: userData.accountType,
-              displayName: userData.displayName,
-              email: userData.email,
-              emailVerified: user.emailVerified,
-              isActive: Math.random() > 0.5 // ✅ محاكاة حالة المستخدم (يجب استبدالها ببيانات حقيقية من Firebase)
-            }];
-          } else {
-            this.userData = [];
-          }
-        });
-      } else {
-        this.userData = [];
+        // Fetch admin users from Firestore
+        this.admins$ = this.firestore.collection('admin').valueChanges({ idField: 'id' });
       }
     });
+  }
+
+  goHome() {
+    this.router.navigate(['/home']);
   }
 }

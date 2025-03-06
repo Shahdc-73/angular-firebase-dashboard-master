@@ -1,0 +1,31 @@
+<!-- Navbar -->
+<nav class="navbar">
+  <h2>Admin Dashboard</h2>
+  <button mat-button routerLink="/home" class="home-button">
+    <mat-icon>home</mat-icon> Home
+  </button>
+</nav>
+
+<!-- Reports Container -->
+<div class="reports-container">
+  <h1>Reports</h1>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- Reports List -->
+  <div *ngIf="!errorMessage">
+    <mat-list>
+      <mat-list-item *ngFor="let report of displayReports()">
+        <mat-icon mat-list-icon>assessment</mat-icon>
+        <span mat-line><strong>Title:</strong> {{ report.title }}</span>
+        <span mat-line><strong>Post ID:</strong> {{ report.postId }}</span>
+        <span mat-line><strong>Post Content:</strong> {{ report.postContent }}</span>
+        <span mat-line><strong>Reported by:</strong> {{ report.userId }}</span>
+        <span mat-line><strong>Timestamp:</strong> {{ report.timestamp?.toDate() | date:'short' }}</span>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>

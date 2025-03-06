@@ -1,84 +1,109 @@
-/* 🌟 Header / Navbar */
-.navbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    padding: 10px;
+/* Sidebar styles */
+.sidenav-container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidenav {
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  padding-top: 20px;
+}
+
+.sidenav .mat-nav-list {
+  padding-top: 0;
+}
+
+.sidenav .mat-list-item {
+  color: white;
+}
+
+.sidenav .mat-list-item:hover {
+  background-color: #34495e;
+}
+
+.sidenav .mat-icon {
+  color: white;
+}
+
+/* Main content area */
+.mat-sidenav-content {
+  flex: 1;
+  padding: 16px;
 }
 
 .app-title {
-    font-size: 20px;
-    font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .spacer {
-    flex: 1;
+  flex: 1;
 }
 
-/* 📌 Main Content */
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 40px;
-    margin: 40px auto;
-    max-width: 900px;
-}
-
-/* 📦 Column Layout */
-.column {
-    flex: 1;
-    max-width: 400px;
-}
-
-/* 🎨 Card Styling */
-.auth-card, .dashboard-card, .status-card {
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    width: 100%;
-}
-
-/* 🔘 Button Group */
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-}
-
-/* ✅ User Status */
-.status-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 20px;
-}
-
-/* 🎨 Status Icons */
-.status-icon.success {
-    color: #28a745; /* Green */
-}
-
-.status-icon.error {
-    color: #dc3545; /* Red */
-}
-
-/* 📌 Footer */
 .footer {
-    background-color: #f8f9fa;
-    text-align: center;
-    padding: 15px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    font-size: 14px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 10px;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .sidenav {
+    width: 200px;
+  }
+}
+
+/* Sidebar color when logged in (green) */
+.sidenav.logged-in {
+  background-color: green; /* Green when the admin is logged in */
+}
+
+/* Sidebar color when logged out (gray) */
+.sidenav.logged-out {
+  background-color: gray; /* Gray when the admin is not logged in */
+}
+
+/* Additional styles for home.component.css */
+.sidenav-container {
+  display: flex;
+  height: 100%;
+}
+
+mat-sidenav {
+  width: 250px;
+  transition: background-color 0.3s ease;
+}
+
+.logged-in {
+  background-color: rgb(75, 169, 75); /* Green when the admin is logged in */
+}
+
+.logged-out {
+  background-color: gray; /* Gray when the admin is not logged in */
+}
+
+mat-nav-list {
+  padding-top: 20px;
+}
+
+mat-list-item {
+  cursor: pointer;
+}
+
+mat-toolbar {
+  background-color: #3f51b5;
+  color: white;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #3f51b5;
+  color: white;
 }

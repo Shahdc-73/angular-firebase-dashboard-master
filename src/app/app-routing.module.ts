@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
+import { ReportsComponent } from './reports/reports.component';
 
 import { AuthGuard } from './services/auth.guard';
 import { CommunityPostsComponent } from './community-posts/community-posts.component';
@@ -21,7 +22,8 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'verify-email', component: VerifyEmailComponent },
-     {path: ' community', component: CommunityPostsComponent},
+    {path: ' community', component: CommunityPostsComponent},
+    {path: 'reports', component:ReportsComponent},
     { path: '**', component: HomeComponent },                       
 ];
 

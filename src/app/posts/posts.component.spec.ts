@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommunityPostsComponent } from './community-posts.component';
+import { PostsComponent } from './posts.component';
 
-describe('CommunityPostsComponent', () => {
-  let component: CommunityPostsComponent;
-  let fixture: ComponentFixture<CommunityPostsComponent>;
+describe('PostsComponent', () => {
+  let component: PostsComponent;
+  let fixture: ComponentFixture<PostsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CommunityPostsComponent ]
+      declarations: [ PostsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CommunityPostsComponent);
+    fixture = TestBed.createComponent(PostsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

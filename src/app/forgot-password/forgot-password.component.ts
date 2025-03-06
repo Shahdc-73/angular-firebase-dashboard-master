@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service'
+import { AuthService } from '../services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -16,6 +15,7 @@ export class ForgotPasswordComponent implements OnInit {
     isProgressVisible: boolean;
     forgotPasswordForm: FormGroup;
     firebaseErrorMessage: string;
+    adminEmail: string = '';  // Added adminEmail to store the current logged-in user's email
 
     constructor(private authService: AuthService, private router: Router, private afAuth: AngularFireAuth) {
         this.mailSent = false;
@@ -29,8 +29,10 @@ export class ForgotPasswordComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.afAuth.authState.subscribe(user => {               // if the user is logged in, update the form value with their email address
+        // Subscribe to auth state and update the admin's email if logged in
+        this.afAuth.authState.subscribe(user => {
             if (user) {
+                this.adminEmail = user.email;  // Store the logged-in admin's email
                 this.forgotPasswordForm.patchValue({
                     email: user.email
                 });
@@ -39,23 +41,23 @@ export class ForgotPasswordComponent implements OnInit {
     }
 
     retrievePassword() {
-        this.isProgressVisible = true;                          // show the progress indicator as we start the Firebase password reset process
+        this.isProgressVisible = true;  // Show the progress indicator
 
-        if (this.forgotPasswordForm.invalid)
+        if (this.forgotPasswordForm.invalid) {
             return;
+        }
 
+        // Call resetPassword method from AuthService
         this.authService.resetPassword(this.forgotPasswordForm.value.email).then((result) => {
-            this.isProgressVisible = false;                     // no matter what, when the auth service returns, we hide the progress indicator
-            if (result == null) {                               // null is success, false means there was an error
-                console.log('password reset email sent...');
+            this.isProgressVisible = false;  // Hide the progress indicator
+
+            if (result == null) {  // Success
+                console.log('Password reset email sent...');
                 this.mailSent = true;
-                // this.router.navigate(['/dashboard']);        // when the user is logged in, navigate them to dashboard
-            }
-            else if (result.isValid == false) {
-                console.log('login error', result);
+            } else if (result.isValid === false) {  // Error
+                console.log('Login error', result);
                 this.firebaseErrorMessage = result.message;
             }
         });
     }
-
 }

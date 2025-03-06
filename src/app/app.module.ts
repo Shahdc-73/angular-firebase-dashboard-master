@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+ 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,8 +11,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
-import { CommunityPostsComponent } from './community-posts/community-posts.component';
-
+import { PostsComponent } from './posts/posts.component'; 
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -58,6 +57,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from '../environments/environment';
+import { ReportsComponent } from './reports/reports.component';
 
 
 
@@ -71,8 +71,9 @@ import { environment } from '../environments/environment';
         VerifyEmailComponent,
         DashboardComponent,
         AdminDashboardComponent,
-        CommunityPostsComponent
-         
+        PostsComponent,
+        ReportsComponent
+    
     ],
     imports: [
         BrowserModule,

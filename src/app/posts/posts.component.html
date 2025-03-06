@@ -1,0 +1,44 @@
+<div class="post-list">
+    <div *ngFor="let post of posts$ | async" class="post-card">
+      <div *ngIf="editingPost && editingPost.id === post.id">
+        <!-- Edit Form -->
+        <input type="text" [(ngModel)]="editingPost.title" placeholder="Title">
+        <textarea [(ngModel)]="editingPost.content" placeholder="Write something..."></textarea>
+        <input type="text" [(ngModel)]="editingPost.mediaUrl" placeholder="Media URL (optional)">
+        <select [(ngModel)]="editingPost.mediaType">
+          <option value="">Select Media Type</option>
+          <option value="image">Image</option>
+          <option value="video">Video</option>
+        </select>
+        <button (click)="saveEdit()">Save</button>
+        <button (click)="cancelEdit()">Cancel</button>
+      </div>
+  
+      <div *ngIf="!editingPost || editingPost.id !== post.id">
+        <!-- Display Post -->
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.content }}</p>
+        <div *ngIf="post.mediaType === 'image'">
+          <img [src]="post.mediaUrl" alt="Post Image">
+        </div>
+        <div *ngIf="post.mediaType === 'video'">
+          <video [src]="post.mediaUrl" controls></video>
+        </div>
+        <p class="timestamp">Posted by {{ post.createdBy }} on {{ post.timestamp?.toDate() | date:'medium' }}</p>
+        <button (click)="startEditing(post)">Edit</button>
+        <button (click)="deletePost(post.id)">Delete</button>
+      </div>
+    </div>
+  </div>
+  
+  <h3>Create a New Post</h3>
+  <input type="text" [(ngModel)]="newPost.title" placeholder="Title">
+  <textarea [(ngModel)]="newPost.content" placeholder="Write something..."></textarea>
+  <input type="text" [(ngModel)]="newPost.mediaUrl" placeholder="Media URL (optional)">
+  <select [(ngModel)]="newPost.mediaType">
+    <option value="">Select Media Type</option>
+    <option value="image">Image</option>
+    <option value="video">Video</option>
+  </select>
+  <button (click)="addPost()">Post</button>
+  

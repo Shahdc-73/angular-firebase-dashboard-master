@@ -37,7 +37,7 @@ mat-form-field {
 }
 
 /* زر تسجيل الدخول والتسجيل */
-.btn-primary {
+.btn-signin {
     width: 100%;
     font-weight: bold;
     border-radius: 8px;
@@ -55,4 +55,28 @@ mat-form-field {
     display: flex;
     justify-content: center;
     margin-top: 10px;
+}
+
+/* تنسيق الرسالة الناجحة */
+.success-message {
+    margin-top: 20px;
+    color: green;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* تنسيق رابط "نسيت كلمة السر" */
+.forgot-password-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.forgot-password-container a {
+    color: #1976d2;  /* Blue color for the link */
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password-container a:hover {
+    text-decoration: underline;
 }

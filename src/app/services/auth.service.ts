@@ -1,159 +1,177 @@
-import { AnimationDriver } from '@angular/animations/browser';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class AuthService {
+  userLoggedIn: boolean;      // other components can check on this variable for the login status of the user
 
-    userLoggedIn: boolean;      // other components can check on this variable for the login status of the user
+  constructor(private router: Router, private afAuth: AngularFireAuth, private afs: AngularFirestore) {
+    this.userLoggedIn = false;
+    this.afAuth.onAuthStateChanged((admin) => {
+      this.userLoggedIn = !!admin;
+    });
+  }
 
-    constructor(private router: Router, private afAuth: AngularFireAuth, private afs: AngularFirestore) {
-        this.userLoggedIn = false;
+  // Get current user's email (admin collection only)
+  getCurrentUserEmail(): Observable<string> {
+    return new Observable(observer => {
+      this.afAuth.authState.subscribe(admin => {
+        if (admin) {
+          observer.next(admin.email);  
+        } else {
+          observer.next('');  
+        }
+      });
+    });
+  }
 
-        this.afAuth.onAuthStateChanged((admin) => {              // set up a subscription to always know the login status of the user
-            if (admin) {
-                this.userLoggedIn = true;
-            } else {
-                this.userLoggedIn = false;
-            }
-        });
+  // Get current user (from admin collection only)
+  async getCurrentUser(): Promise<any> {
+    const user = await this.afAuth.currentUser;
+    if (user) {
+      const adminDoc = await this.afs.collection('admin').doc(user.email.toLowerCase()).get().toPromise();
+      if (adminDoc.exists) {
+        return adminDoc.data();
+      } else {
+        throw new Error('User is not an admin');
+      }
     }
+    throw new Error('User not authenticated');
+  }
 
-    loginUser(email: string, password: string): Promise<any> {
-        return this.afAuth.signInWithEmailAndPassword(email, password)
+  // Check if user is admin (from admin collection only)
+  async isAdmin(): Promise<boolean> {
+    const user = await this.getCurrentUser();
+    return !!user;  // If user exists in admin collection, they are admin
+  }
+
+  /////////// **REPORT MANAGEMENT** ///////////
+
+  // Add a new report (Only admins can add reports)
+  async addReport(report: { userId: string, postId: string, title: string, content: string }) {
+    const user = await this.getCurrentUser();
+    if (!user) throw new Error('User not authenticated');
+
+    return this.afs.collection('reports').add({
+      userId: report.userId,
+      postId: report.postId,
+      title: report.title,
+      content: report.content,
+      timestamp: new Date(),
+    }).then(() => {
+      console.log('Report added successfully');
+    }).catch(error => {
+      console.log('Error adding report: ', error);
+      throw error;
+    });
+  }
+
+  // Get all reports
+  getReports(): Observable<any[]> {
+    return this.afs.collection('reports', ref => ref.orderBy('timestamp', 'desc'))
+      .valueChanges({ idField: 'id' });
+  }
+
+  /////////// **AUTHENTICATION FUNCTIONS** ///////////
+
+  // Get all users (from users collection)
+  getAllUsersFromUsersCollection(): Observable<any[]> {
+    return this.afs.collection('users', ref => ref.orderBy('email'))
+      .valueChanges({ idField: 'id' });
+  }
+
+  // Login user (only allows admin login)
+  loginUser(email: string, password: string): Promise<any> {
+    return this.afAuth.signInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('Auth Service: loginUser: success');
+      })
+      .catch(error => {
+        console.log('Auth Service: login error...', error);
+        return { isValid: false, message: error.message };
+      });
+  }
+
+  // Sign up user (create admin user)
+  signupUser(user: any): Promise<any> {
+    return this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
+      .then((result) => {
+        let emailLower = user.email.toLowerCase();
+
+        this.afs.doc('/admin/' + emailLower)
+          .set({
+            accountType: 'admin',
+            displayName: user.displayName,
+            displayName_lower: user.displayName.toLowerCase(),
+            email: user.email,
+            email_lower: emailLower
+          });
+
+        result.user.sendEmailVerification();
+      })
+      .catch(error => {
+        console.log('Auth Service: signup error', error);
+        return { isValid: false, message: error.message };
+      });
+  }
+
+  // Reset password
+  resetPassword(email: string): Promise<any> {
+    return this.afAuth.sendPasswordResetEmail(email)
+      .then(() => {
+        console.log('Auth Service: reset password success');
+      })
+      .catch(error => {
+        console.log('Auth Service: reset password error...', error);
+        return error;
+      });
+  }
+
+  // Resend verification email
+  async resendVerificationEmail() {
+    return (await this.afAuth.currentUser).sendEmailVerification()
+      .catch(error => {
+        console.log('Auth Service: sendVerificationEmail error...', error);
+        return error;
+      });
+  }
+
+  // Logout user
+  logoutUser(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.afAuth.currentUser.then(user => {
+        if (!user) {
+          reject('You are not logged in or registered');
+          return;
+        }
+
+        if (window.confirm('Are you sure you want to log out?')) {
+          this.afAuth.signOut()
             .then(() => {
-                console.log('Auth Service: loginUser: success');
-                // this.router.navigate(['/dashboard']);
+              this.router.navigate(['/home']);
+              resolve();
             })
             .catch(error => {
-                console.log('Auth Service: login error...');
-                console.log('error code', error.code);
-                console.log('error', error);
-                if (error.code)
-                    return { isValid: false, message: error.message };
+              console.log('Auth Service: logout error...', error);
+              reject(error);
             });
-    }
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
 
-    signupUser(user: any): Promise<any> {
-        return this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
-            .then((result) => {
-                let emailLower = user.email.toLowerCase();
-
-                this.afs.doc('/users/' + emailLower)                        // on a successful signup, create a document in 'users' collection with the new user's info
-                    .set({
-                        accountType: 'endUser',
-                        displayName: user.displayName,
-                        displayName_lower: user.displayName.toLowerCase(),
-                        email: user.email,
-                        email_lower: emailLower
-                    });
-
-                    result.user.sendEmailVerification();                    // immediately send the user a verification email
-            })
-            .catch(error => {
-                console.log('Auth Service: signup error', error);
-                if (error.code)
-                    return { isValid: false, message: error.message };
-            });
-    }
-
-    resetPassword(email: string): Promise<any> {
-        return this.afAuth.sendPasswordResetEmail(email)
-            .then(() => {
-                console.log('Auth Service: reset password success');
-                // this.router.navigate(['/amount']);
-            })
-            .catch(error => {
-                console.log('Auth Service: reset password error...');
-                console.log(error.code);
-                console.log(error)
-                if (error.code)
-                    return error;
-            });
-    }
-
-    async resendVerificationEmail() {                         // verification email is sent in the Sign Up function, but if you need to resend, call this function
-        return (await this.afAuth.currentUser).sendEmailVerification()
-            .then(() => {
-                // this.router.navigate(['home']);
-            })
-            .catch(error => {
-                console.log('Auth Service: sendVerificationEmail error...');
-                console.log('error code', error.code);
-                console.log('error', error);
-                if (error.code)
-                    return error;
-            });
-    }
-
-    logoutUser(): Promise<void> {
-        return this.afAuth.signOut()
-            .then(() => {
-                this.router.navigate(['/home']);                    // when we log the user out, navigate them to home
-            })
-            .catch(error => {
-                console.log('Auth Service: logout error...');
-                console.log('error code', error.code);
-                console.log('error', error);
-                if (error.code)
-                    return error;
-            });
-    }
-
-    setUserInfo(payload: object) {
-        console.log('Auth Service: saving user info...');
-        this.afs.collection('users')
-            .add(payload).then(function (res) {
-                console.log("Auth Service: setUserInfo response...")
-                console.log(res);
-            })
-    }
-
-    getCurrentUser() {
-        return this.afAuth.currentUser;                                 // returns user object for logged-in users, otherwise returns null 
-    }
-
-    // ─────────────────────────────────────────────
-    // ✅ POSTS COLLECTION CRUD OPERATIONS
-    // ─────────────────────────────────────────────
-
-    // GET all posts
-    getCommunityPosts(): Observable<any[]> {
-        return this.afs.collection('posts', ref => ref.orderBy('timestamp', 'desc'))
-            .valueChanges({ idField: 'id' });
-    }
-
-    // ADD a new post
-    async addCommunityPost(post: { title: string; content: string }) {
-        const user = await this.afAuth.currentUser;
-        if (!user) throw new Error('User not authenticated');
-
-        return this.afs.collection('posts').add({
-            ...post,
-            createdBy: user.email,
-            timestamp: new Date(),
-        });
-    }
-
-    // UPDATE a post
-    async updateCommunityPost(postId: string, updatedPost: { title: string; content: string }) {
-        const user = await this.afAuth.currentUser;
-        if (!user) throw new Error('User not authenticated');
-
-        return this.afs.collection('posts').doc(postId).update(updatedPost);
-    }
-
-    // DELETE a post
-    async deleteCommunityPost(postId: string) {
-        const user = await this.afAuth.currentUser;
-        if (!user) throw new Error('User not authenticated');
-
-        return this.afs.collection('posts').doc(postId).delete();
-    }
-
+  // Save admin information to Firestore
+  setUserInfo(payload: object) {
+    this.afs.collection('admin')
+      .add(payload).then(res => {
+        console.log("Auth Service: setUserInfo response...", res);
+      });
+  }
 }

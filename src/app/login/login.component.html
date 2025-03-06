@@ -1,16 +1,12 @@
 <div class="container">
-    <mat-card>
-        
-        <div class="home-btn-container">
-            <button mat-raised-button color="primary" routerLink="/home" class="home-btn">
-                <mat-icon>home</mat-icon>  
-                <span>Home</span>
-            </button>
-        </div>
+    <button mat-raised-button color="primary" routerLink="/home" class="home-button">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+    </button>
 
-        <h2 class="title">Login</h2>
-
+    <mat-card class="form-card">
         <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+            <h2>Login</h2>
             <p>
                 <mat-form-field appearance="outline">
                     <mat-label>Email</mat-label>
@@ -29,6 +25,16 @@
 
             <button mat-raised-button color="primary" class="btn-signin">Login</button>
         </form>
+
+        <!-- Forgot Password Link -->
+        <div class="forgot-password-container">
+            <a mat-button routerLink="/forgot-password">Forgot Password?</a>
+        </div>
+
+        <!-- Success Message -->
+        <div *ngIf="loginSuccess" class="success-message">
+            <span>Login successful! Redirecting to the dashboard...</span>
+        </div>
     </mat-card>
 </div>
 

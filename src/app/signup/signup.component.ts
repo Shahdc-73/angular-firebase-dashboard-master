@@ -14,14 +14,16 @@ export class SignupComponent implements OnInit {
     isProgressVisible: boolean;
     signupForm: FormGroup;
     firebaseErrorMessage: string;
+    showLoginButton: boolean;  // New flag to show login button
 
     constructor(private authService: AuthService, private router: Router, private afAuth: AngularFireAuth) {
         this.isProgressVisible = false;
         this.firebaseErrorMessage = '';
+        this.showLoginButton = false;  // Initially, don't show the login button
     }
 
     ngOnInit(): void {
-        if (this.authService.userLoggedIn) {                       // if the user's logged in, navigate them to the dashboard (NOTE: don't use afAuth.currentUser -- it's never null)
+        if (this.authService.userLoggedIn) {                       
             this.router.navigate(['/dashboard']);
         }
 
@@ -33,19 +35,26 @@ export class SignupComponent implements OnInit {
     }
 
     signup() {
-        if (this.signupForm.invalid)                            // if there's an error in the form, don't submit it
+        if (this.signupForm.invalid)  // If there's an error in the form, don't submit it
             return;
 
         this.isProgressVisible = true;
         this.authService.signupUser(this.signupForm.value).then((result) => {
-            if (result == null)                                 // null is success, false means there was an error
+            if (result == null) {  // null is success
                 this.router.navigate(['/dashboard']);
-            else if (result.isValid == false)
+            } else if (result.isValid == false) {  // Error occurs
                 this.firebaseErrorMessage = result.message;
+                // Check if the error is 'email already in use'
+                if (result.message.includes('already in use')) {
+                    this.showLoginButton = true;  // Show the login button
+                }
+            }
 
-            this.isProgressVisible = false;                     // no matter what, when the auth service returns, we hide the progress indicator
-        }).catch(() => {
+            this.isProgressVisible = false;  // Hide the progress indicator
+        }).catch((error) => {
             this.isProgressVisible = false;
+            // Handle any additional error that might occur
+            console.error(error);
         });
     }
 }

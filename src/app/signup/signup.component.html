@@ -31,5 +31,10 @@
 
             <button mat-raised-button color="primary">Signup</button>
         </form>
+
+        <!-- Show the Login button if the email is already in use -->
+        <div *ngIf="showLoginButton" class="login-button-container">
+            <button mat-raised-button color="accent" routerLink="/login" class="login-button">Go to Login</button>
+        </div>
     </mat-card>
 </div>

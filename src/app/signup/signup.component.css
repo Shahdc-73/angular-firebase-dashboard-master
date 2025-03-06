@@ -56,3 +56,32 @@ mat-form-field {
   justify-content: center;
   margin-top: 10px;
 }
+
+/* تنسيق رابط استرجاع كلمة المرور */
+.forgot-password-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.forgot-password-container a {
+  color: #1976d2;  /* Blue color for the link */
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.forgot-password-container a:hover {
+  text-decoration: underline;
+}
+
+/* تنسيق زر "Go to Login" */
+.login-button-container {
+  margin-top: 20px;  /* Move the button lower */
+}
+
+.login-button {
+  background-color: green;  /* Change to green */
+  color: white;
+  width: 100%; /* Optional: to make it take full width */
+  font-weight: bold;
+  border-radius: 8px;
+}

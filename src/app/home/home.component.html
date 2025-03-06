@@ -1,76 +1,83 @@
-<mat-toolbar color="primary" class="navbar">
-    <span class="app-title">My App</span>
-    <span class="spacer"></span>
-    <button mat-icon-button routerLink="/home">
+<mat-sidenav-container class="sidenav-container">
+  <!-- Sidebar -->
+  <mat-sidenav 
+    #sidenav 
+    mode="side" 
+    [opened]="false"
+    [ngClass]="{'logged-in': isAdminLoggedIn, 'logged-out': !isAdminLoggedIn}">
+    
+    <mat-nav-list>
+      <mat-list-item [routerLink]="'/login'" (click)="sidenav.close()">
+        <mat-icon mat-list-icon>login</mat-icon>
+        <span mat-line>Login</span>
+      </mat-list-item>
+      
+      <mat-list-item [routerLink]="'/signup'" (click)="sidenav.close()">
+        <mat-icon mat-list-icon>person_add</mat-icon>
+        <span mat-line>Sign Up</span>
+      </mat-list-item>
+      
+      <mat-list-item (click)="logout(); sidenav.close()">
+        <mat-icon mat-list-icon>logout</mat-icon>
+        <span mat-line>Log Out</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'/forgot-password'" (click)="sidenav.close()">
+        <mat-icon mat-list-icon>help_outline</mat-icon>
+        <span mat-line>Forgot Password</span>
+      </mat-list-item>
+      
+      <mat-list-item [routerLink]="'/verify-email'" (click)="sidenav.close()">
+        <mat-icon mat-list-icon>email</mat-icon>
+        <span mat-line>Verifiy Email</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'/dashboard'" (click)="sidenav.close()">
+        <mat-icon mat-list-icon>dashboard</mat-icon>
+        <span mat-line>Dashboard</span>
+      </mat-list-item>
+
+      <!-- Only show this if the user is an admin -->
+      <mat-list-item *ngIf="isAdminLoggedIn" routerLink="'/admin'" (click)="sidenav.close()">
+        <mat-icon mat-list-icon>admin_panel_settings</mat-icon>
+        <span mat-line>Admin Dashboard</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'/community'" (click)="sidenav.close()">
+        <mat-icon mat-list-icon>group</mat-icon>
+        <span mat-line>Community</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'/reports'" (click)="sidenav.close()">
+        <mat-icon mat-list-icon>assessment</mat-icon>
+        <span mat-line>Reports</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="app-title">HandsTalk</span>
+      <span class="spacer"></span>
+      <button mat-icon-button [routerLink]="'/home'">
         <mat-icon>home</mat-icon>
-    </button>
-</mat-toolbar>
+      </button>
+    </mat-toolbar>
 
-<div class="container">
-    <!-- Authentication Section -->
-    <div class="column">
-        <mat-card class="auth-card">
-            <mat-card-title>User Authentication</mat-card-title>
-            <mat-card-content>
-                <div class="button-group">
-                    <button mat-raised-button color="primary" routerLink="/login">
-                        <mat-icon>login</mat-icon> Login
-                    </button>
-                    <button mat-raised-button color="warn" (click)="logout()">
-                        <mat-icon>logout</mat-icon> Log out
-                    </button>
-                    <button mat-raised-button color="accent" routerLink="/signup">
-                        <mat-icon>person_add</mat-icon> Sign up
-                    </button>
-                </div>
-                <div class="button-group">
-                    <button mat-raised-button color="primary" routerLink="/forgot-password">
-                        <mat-icon>help_outline</mat-icon> Forgot password
-                    </button>
-                    <button mat-raised-button color="primary" routerLink="/verify-email">
-                        <mat-icon>email</mat-icon> Resend verification email
-                    </button>
-                </div>
-            </mat-card-content>
-        </mat-card>
+    <div class="container">
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
     </div>
 
-    <!-- Admin & Dashboard Section -->
-    <div class="column">
-        <mat-card class="dashboard-card">
-            <mat-card-title>Admin & Dashboard</mat-card-title>
-            <mat-card-content>
-                <div class="button-group">
-                    <button mat-raised-button color="primary" routerLink="/dashboard">
-                        <mat-icon>dashboard</mat-icon> Dashboard
-                    </button>
-                    <button mat-raised-button color="primary" routerLink="/admin">
-                        <mat-icon>admin_panel_settings</mat-icon> Admin Dashboard
-                    </button>
-                    <!-- New Community Button -->
-                    <button mat-raised-button color="primary" routerLink="/community">
-                        <mat-icon>group</mat-icon> Community
-                    </button>
-                </div>
-            </mat-card-content>
-        </mat-card>
+    <footer class="footer">
+      <p>&copy; 2025 HandsTalk | All Rights Reserved</p>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
-        <!-- User Status Section -->
-        <mat-card class="status-card" *ngIf="(afAuth.user | async); else notLoggedIn">
-            <mat-icon class="status-icon success">check_circle</mat-icon>
-            <span>User is logged in</span>
-        </mat-card>
-
-        <ng-template #notLoggedIn>
-            <mat-card class="status-card">
-                <mat-icon class="status-icon error">do_not_disturb</mat-icon>
-                <span>User is not logged in</span>
-            </mat-card>
-        </ng-template>
-    </div>
-</div>
-
-<footer class="footer">
-    <p>&copy; 2025 HandsTalk | All Rights Reserved</p>
-</footer>
 <router-outlet></router-outlet>
